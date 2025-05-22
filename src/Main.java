@@ -31,14 +31,17 @@ public class Main {
             nodes[current].add(new Node(current, next, cost, fastTrack));
         }
         Solver solver = new Solver(nodes, numOfAttacks);
+        int[][] testCases = new int[numOfTestCases][2];
         for (int i = 0; i < numOfTestCases; i++){
             line = br.readLine().split(" ");
             int start = Integer.parseInt(line[0]);
             int end = Integer.parseInt(line[1]);
-            int result = solver.solve(start, end);
-            System.out.println(result);
+            testCases[i][0] = start;
+            testCases[i][1] = end;
         }
-
+        for (int i = 0; i < numOfTestCases; i++){
+            System.out.println(solver.solve(testCases[i][0], testCases[i][1]));
+        }
         br.close();
     }
 }

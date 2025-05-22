@@ -10,77 +10,58 @@ public class Solver {
     private int maxNumOfAttacks;
 
     public Solver(List<Node>[] nodesAdjencyList, int numOfAttacks) {
-        this.nodesAdjencyList= nodesAdjencyList;
-        this.maxNumOfAttacks= numOfAttacks + 1;
+        this.nodesAdjencyList = nodesAdjencyList;
+        this.maxNumOfAttacks = numOfAttacks;
     }
 
-    public int solve(int start, int end){
-
-        //TODO
-        return 0;
+    public int solve(int start, int end) {
+        return dijkstraAdapted(start, end);
     }
 
-    private int dijkstraAdapted(int start, int end){
-        boolean[][] selected = new boolean[maxNumOfAttacks][nodesAdjencyList.length];
-        int[][] length = new int[maxNumOfAttacks][nodesAdjencyList.length];
-        int[] via = new int[nodesAdjencyList.length];
-        PriorityQueue<State> connected =
-                new PriorityQueue<>(nodesAdjencyList.length);
-        Arrays.fill(length, Integer.MAX_VALUE);
+    private int dijkstraAdapted(int start, int end) {
+        boolean[][] selected = new boolean[maxNumOfAttacks + 1][nodesAdjencyList.length];
+        int[][] length = new int[maxNumOfAttacks + 1][nodesAdjencyList.length];
+        PriorityQueue<State> connected = new PriorityQueue<>(nodesAdjencyList.length);
+        for (int i = 0; i <= maxNumOfAttacks; i++) {
+            Arrays.fill(length[i], Integer.MAX_VALUE);
+        }
         length[0][start] = 0;
-        via[start] = start;
 
-        Iterator<Node> nodesIterator = nodesAdjencyList[start].iterator();
-        while (nodesIterator.hasNext())
-            connected.add(new State(nodesIterator.next(), 0));
-        State currentState;
-        Node currentNode;
-        do {
-            currentState = connected.poll();
-            currentNode = currentState.getNode();
-            selected[currentState.getAttacksUsed()][currentNode.getNext()] = true;
-            exploreNode(currentState, selected, length, via, connected);
-        } while (!connected.isEmpty() && currentNode.getNext() != end);
-        int solution = Integer.MAX_VALUE;
-        for (int i = 0; i < length.length; i++) {
-            if(length[i][end] != 0){
-                solution = Math.min(solution, length[i][end]);
+        connected.add(new State(start, 0, 0));
+        while (!connected.isEmpty()) {
+            State currentState = connected.poll();
+            int currentNode = currentState.getNode();
+            if (currentNode == end) {
+                return length[currentState.getAttacksUsed()][end];
+            }
+            if (!selected[currentState.getAttacksUsed()][currentNode]) {
+                selected[currentState.getAttacksUsed()][currentNode] = true;
+                exploreNode(currentState, length, connected);
             }
         }
-        return solution;
+        return -1; // not found
     }
 
-    private void exploreNode(State source, boolean[][] selected,
-                             int[][] length, int[] via, PriorityQueue<State> connected) {
-        Node sourceNode = source.getNode();
-        Iterator<Node> adjacentNodes = nodesAdjencyList[sourceNode.getCurrent()].iterator();
-
-
-        while (adjacentNodes.hasNext()){
-            Node node = adjacentNodes.next();
+    private void exploreNode(State source, int[][] length, PriorityQueue<State> connected) {
+        for (Node node : nodesAdjencyList[source.getNode()]) {
             int oppositeNode = node.getNext();
             int currentAttacks = source.getAttacksUsed();
-            if(node.isFastTrack()){
-                if(!selected[currentAttacks + 1][oppositeNode] && currentAttacks + 1 < maxNumOfAttacks){
-                    int newLength = length[currentAttacks][sourceNode.getCurrent()] + sourceNode.getCost()/2;
-                    if (newLength < length[currentAttacks + 1][oppositeNode]) {
-                        State newState = new State(node, currentAttacks + 1);
-                        length[currentAttacks + 1][oppositeNode] = newLength;
-                        connected.add(newState);
-                    }
-                }
-            }
-            if(!selected[currentAttacks][oppositeNode]){
-                int newLength = length[currentAttacks][sourceNode.getCurrent()] + sourceNode.getCost();
+            if (node.isFastTrack() && currentAttacks < maxNumOfAttacks) {
+                int newLength = length[currentAttacks][node.getCurrent()] + node.getCost() / 2;
                 if (newLength < length[currentAttacks][oppositeNode]) {
-                    State newState = new State(node, currentAttacks);
-                    length[currentAttacks][oppositeNode] = newLength;
+                    State newState = new State(node.getNext(), currentAttacks + 1, newLength);
+                    length[currentAttacks + 1][oppositeNode] = newLength;
                     connected.add(newState);
                 }
             }
-
+            int newLength = length[currentAttacks][node.getCurrent()] + node.getCost();
+            if (newLength < length[currentAttacks][oppositeNode]) {
+                State newState = new State(node.getNext(), currentAttacks, newLength);
+                length[currentAttacks][oppositeNode] = newLength;
+                connected.add(newState);
+            }
         }
+    }
 
-        }
 
 }
