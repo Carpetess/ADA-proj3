@@ -31,9 +31,8 @@ public class Solver {
         while (!connected.isEmpty()) {
             State currentState = connected.poll();
             int currentNode = currentState.getNode();
-            if (currentNode == end) {
+            if (currentNode == end)
                 return length[currentState.getAttacksUsed()][end];
-            }
             if (!selected[currentState.getAttacksUsed()][currentNode]) {
                 selected[currentState.getAttacksUsed()][currentNode] = true;
                 exploreNode(currentState, length, connected);

@@ -25,7 +25,7 @@ public class Main {
             int current = Integer.parseInt(currentLine[0]);
             int next = Integer.parseInt(currentLine[1]);
             int cost = Integer.parseInt(currentLine[2]);
-            boolean fastTrack = Boolean.parseBoolean(currentLine[3]);
+            boolean fastTrack = currentLine[3].equals("1");
             if( nodes[current] == null)
                 nodes[current] = new LinkedList<>();
             nodes[current].add(new Node(current, next, cost, fastTrack));
