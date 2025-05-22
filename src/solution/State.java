@@ -1,24 +1,18 @@
 package solution;
 
 public class State {
-    private int next;
-    private int cost;
-    private boolean fastTrack;
+    private Node node;
+    private int attacksUsed;
 
-    public State(int next, int cost, boolean fastTrack) {
-        this.next = next;
-        this.cost = cost;
-        this.fastTrack = fastTrack;
+    public State(Node node, int attacksUsed) {
+        this.node = node;
+        this.attacksUsed = attacksUsed;
     }
 
-    public int getNext() {
-        return next;
+    public int getAttacksUsed() {
+        return attacksUsed;
     }
-
-    public int getCost() {
-        return cost;
-    }
-    public boolean isFastTrack() {
-        return fastTrack;
+    public Node getNode() {
+        return node;
     }
 }
