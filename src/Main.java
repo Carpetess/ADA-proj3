@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
+    @SuppressWarnings("uncheked")
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
@@ -18,7 +19,7 @@ public class Main {
         int numOfAttacks = Integer.parseInt(line[2]);
         int numOfTestCases = Integer.parseInt(line[3]);
 
-        List<Node>[] nodes = new LinkedList[numOfSquares];
+        Solver solver = new Solver(numOfSquares,numOfAttacks);
 
         for (int i = 0; i < numOfStreets; i++){
             String[] currentLine = br.readLine().split(" ");
@@ -26,11 +27,10 @@ public class Main {
             int next = Integer.parseInt(currentLine[1]);
             int cost = Integer.parseInt(currentLine[2]);
             boolean fastTrack = currentLine[3].equals("1");
-            if( nodes[current] == null)
-                nodes[current] = new LinkedList<>();
-            nodes[current].add(new Node(current, next, cost, fastTrack));
+            solver.addState(current, next, cost, fastTrack);
         }
-        Solver solver = new Solver(nodes, numOfAttacks);
+
+
         int[][] testCases = new int[numOfTestCases][2];
         for (int i = 0; i < numOfTestCases; i++){
             line = br.readLine().split(" ");

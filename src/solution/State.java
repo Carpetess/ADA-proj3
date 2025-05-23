@@ -14,8 +14,13 @@ public class State implements Comparable<State> {
     public int getAttacksUsed() {
         return attacksUsed;
     }
+
     public int getNode() {
         return node;
+    }
+
+    public int getTotalDistance() {
+        return totalDistance;
     }
 
     @Override
