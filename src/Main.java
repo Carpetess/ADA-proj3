@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
+    private static final String FAST_TRACK_STRING = "1";
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,7 +24,7 @@ public class Main {
             int current = Integer.parseInt(currentLine[0]);
             int next = Integer.parseInt(currentLine[1]);
             int cost = Integer.parseInt(currentLine[2]);
-            boolean fastTrack = currentLine[3].equals("1");
+            boolean fastTrack = currentLine[3].equals(FAST_TRACK_STRING);
             solver.addState(current, next, cost, fastTrack);
         }
 
