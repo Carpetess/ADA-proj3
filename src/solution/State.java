@@ -1,6 +1,9 @@
 // @author André Filipe 65371 Guilherme Fialho 65581
 package solution;
 
+/**
+ * Stores information about one possible state of the race.
+ */
 public class State implements Comparable<State> {
     private int node;
     private int totalDistance;

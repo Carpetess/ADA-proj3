@@ -22,16 +22,22 @@ public class Solver {
     }
 
     public void addState(int current, int next, int cost, boolean fastTrack) {
-        nodesAdjencyList[current].add(new Node(current, next, cost, fastTrack));
+        nodesAdjencyList[current].add(new Node(next, cost, fastTrack));
     }
 
+    /**
+     * Dijkstra's algorithm adapted to handle multiple sequences of attacks.
+     * @param start the start of the race.
+     * @param end the end of the race.
+     * @return the minimum distance to the end of the race.
+     */
     private int dijkstra(int start, int end) {
 
         boolean[][] visited = new boolean[maxNumOfAttacks + 1][nodesAdjencyList.length];
 
         int[][] length = new int[maxNumOfAttacks + 1][nodesAdjencyList.length];
 
-        PriorityQueue<State> connected = new PriorityQueue<>();
+        Queue<State> connected = new PriorityQueue<>();
 
         for (int i = 0; i <= maxNumOfAttacks; i++) {
             Arrays.fill(length[i], Integer.MAX_VALUE);
@@ -51,7 +57,6 @@ public class Solver {
             if (visited[attacksUsed][currentNode]) {
                 continue;
             }
-
             visited[attacksUsed][currentNode] = true;
 
             exploreNode(current,connected,length,attacksUsed);
@@ -61,7 +66,15 @@ public class Solver {
         return -1;
     }
 
-    private void exploreNode(State current, PriorityQueue<State> connected, int[][] length, int attacksUsed){
+    /**
+     * Explores the adjacent nodes of the current node.
+     * Takes into account possible fast tracks, calculates possibilities with and without attacks.
+     * @param current the current state of the race.
+     * @param connected the queue of states that will be explored.
+     * @param length the array of distances between nodes.
+     * @param attacksUsed the number of attacks used so far.
+     */
+    private void exploreNode(State current, Queue<State> connected, int[][] length, int attacksUsed){
         int currentNode = current.getNode();
         int currentDist = current.getTotalDistance();
 
