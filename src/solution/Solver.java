@@ -82,6 +82,8 @@ public class Solver {
             int nextNode = edge.getNext();
             int edgeCost = edge.getCost();
 
+            // We had a rough time figuring out how to access the length array.
+            // We used AI to figure it out, and this is the result.
             int newDist1 = currentDist + edgeCost;
             if (newDist1 < length[attacksUsed][nextNode]) {
                 length[attacksUsed][nextNode] = newDist1;
