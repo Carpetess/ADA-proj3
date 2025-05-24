@@ -39,11 +39,7 @@ public class Main {
             //testCases[i][1] = end;
             System.out.println(solver.solve(start, end));
         }
-        /**
-        for (int i = 0; i < numOfTestCases; i++){
-            System.out.println(solver.solve(testCases[i][0], testCases[i][1]));
-        }
-         */
+
         br.close();
     }
 }
