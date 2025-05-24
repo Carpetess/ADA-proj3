@@ -17,78 +17,78 @@ public class Solver {
     }
 
     public int solve(int start, int end) {
-        return dijkstraAdapted(start, end);
+        return dijkstra(start, end);
     }
 
     public void addState(int current, int next, int cost, boolean fastTrack) {
         nodesAdjencyList[current].add(new Node(current, next, cost, fastTrack));
     }
 
-    private int dijkstraAdapted(int start, int end) {
-        // visited[attacks][node] - controla se já processamos este estado
+    private int dijkstra(int start, int end) {
+
         boolean[][] visited = new boolean[maxNumOfAttacks + 1][nodesAdjencyList.length];
 
-        // dist[attacks][node] - menor distância para chegar ao nó com exatamente 'attacks' ataques usados
-        int[][] dist = new int[maxNumOfAttacks + 1][nodesAdjencyList.length];
+        int[][] length = new int[maxNumOfAttacks + 1][nodesAdjencyList.length];
 
-        PriorityQueue<State> pq = new PriorityQueue<>();
+        PriorityQueue<State> connected = new PriorityQueue<>();
 
-        // Inicializar distâncias
         for (int i = 0; i <= maxNumOfAttacks; i++) {
-            Arrays.fill(dist[i], Integer.MAX_VALUE);
+            Arrays.fill(length[i], Integer.MAX_VALUE);
         }
 
-        // Estado inicial: no nó start, 0 ataques usados, distância 0
-        dist[0][start] = 0;
-        pq.add(new State(start, 0, 0));
+        length[0][start] = 0;
+        connected.add(new State(start, 0, 0));
 
-        while (!pq.isEmpty()) {
-            State current = pq.poll();
+        while (!connected.isEmpty()) {
+            State current = connected.poll();
             int currentNode = current.getNode();
             int attacksUsed = current.getAttacksUsed();
-            int currentDist = current.getTotalDistance();
 
-            // Se já processamos este estado, pular
+
             if (visited[attacksUsed][currentNode]) {
                 continue;
             }
 
             visited[attacksUsed][currentNode] = true;
 
-            Iterator<Node> edges = nodesAdjencyList[currentNode].iterator();
+            exploreNode(current,connected,length,attacksUsed);
 
-            // Explorar vizinhos
-            while (edges.hasNext()) {
-                Node edge = edges.next();
-                int nextNode = edge.getNext();
-                int edgeCost = edge.getCost();
+        }
 
-                // Opção 1: Não usar ataque (sempre possível)
-                int newDist1 = currentDist + edgeCost;
-                if (newDist1 < dist[attacksUsed][nextNode]) {
-                    dist[attacksUsed][nextNode] = newDist1;
-                    pq.add(new State(nextNode, attacksUsed, newDist1));
-                }
+        int result = Integer.MAX_VALUE;
+        for (int attacks = 0; attacks <= maxNumOfAttacks; attacks++) {
+            result = Math.min(result, length[attacks][end]);
+        }
 
-                // Opção 2: Usar ataque (se possível e permitido)
-                if (edge.isFastTrack() && attacksUsed < maxNumOfAttacks) {
-                    int newDist2 = currentDist + edgeCost / 2;
-                    if (newDist2 < dist[attacksUsed + 1][nextNode]) {
-                        dist[attacksUsed + 1][nextNode] = newDist2;
-                        pq.add(new State(nextNode, attacksUsed + 1, newDist2));
-                    }
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+
+    private void exploreNode(State current, PriorityQueue<State> connected, int[][] length, int attacksUsed){
+        int currentNode = current.getNode();
+        int currentDist = current.getTotalDistance();
+
+        Iterator<Node> edges = nodesAdjencyList[currentNode].iterator();
+
+        while (edges.hasNext()) {
+            Node edge = edges.next();
+            int nextNode = edge.getNext();
+            int edgeCost = edge.getCost();
+
+            int newDist1 = currentDist + edgeCost;
+            if (newDist1 < length[attacksUsed][nextNode]) {
+                length[attacksUsed][nextNode] = newDist1;
+                connected.add(new State(nextNode, attacksUsed, newDist1));
+            }
+
+            if (edge.isFastTrack() && attacksUsed < maxNumOfAttacks) {
+                int newDist2 = currentDist + edgeCost / 2;
+                if (newDist2 < length[attacksUsed + 1][nextNode]) {
+                    length[attacksUsed + 1][nextNode] = newDist2;
+                    connected.add(new State(nextNode, attacksUsed + 1, newDist2));
                 }
             }
         }
 
-
-        // Encontrar a menor distância para o nó final, considerando qualquer número de ataques
-        int result = Integer.MAX_VALUE;
-        for (int attacks = 0; attacks <= maxNumOfAttacks; attacks++) {
-            result = Math.min(result, dist[attacks][end]);
-        }
-
-        return result == Integer.MAX_VALUE ? -1 : result;
     }
 }
 

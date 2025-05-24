@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
-    @SuppressWarnings("uncheked")
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String[] line = br.readLine().split(" ");
@@ -31,17 +31,20 @@ public class Main {
         }
 
 
-        int[][] testCases = new int[numOfTestCases][2];
+        //int[][] testCases = new int[numOfTestCases][2];
         for (int i = 0; i < numOfTestCases; i++){
             line = br.readLine().split(" ");
             int start = Integer.parseInt(line[0]);
             int end = Integer.parseInt(line[1]);
-            testCases[i][0] = start;
-            testCases[i][1] = end;
+            //testCases[i][0] = start;
+            //testCases[i][1] = end;
+            System.out.println(solver.solve(start, end));
         }
+        /**
         for (int i = 0; i < numOfTestCases; i++){
             System.out.println(solver.solve(testCases[i][0], testCases[i][1]));
         }
+         */
         br.close();
     }
 }
