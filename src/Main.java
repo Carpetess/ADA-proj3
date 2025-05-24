@@ -1,6 +1,5 @@
 import solution.Node;
 import solution.Solver;
-import solution.State;
 
 import java.io.BufferedReader;
 import java.io.IOException;
