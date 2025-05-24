@@ -1,3 +1,4 @@
+// @author André Filipe 65371 Guilherme Fialho 65581
 package solution;
 
 public class Node {

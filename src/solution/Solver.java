@@ -1,3 +1,4 @@
+// @author André Filipe 65371 Guilherme Fialho 65581
 package solution;
 
 import java.util.*;
@@ -42,8 +43,10 @@ public class Solver {
         while (!connected.isEmpty()) {
             State current = connected.poll();
             int currentNode = current.getNode();
-            int attacksUsed = current.getAttacksUsed();
+            if (currentNode == end)
+                return current.getTotalDistance();
 
+            int attacksUsed = current.getAttacksUsed();
 
             if (visited[attacksUsed][currentNode]) {
                 continue;
@@ -55,12 +58,7 @@ public class Solver {
 
         }
 
-        int result = Integer.MAX_VALUE;
-        for (int attacks = 0; attacks <= maxNumOfAttacks; attacks++) {
-            result = Math.min(result, length[attacks][end]);
-        }
-
-        return result == Integer.MAX_VALUE ? -1 : result;
+        return -1;
     }
 
     private void exploreNode(State current, PriorityQueue<State> connected, int[][] length, int attacksUsed){

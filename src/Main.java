@@ -1,11 +1,9 @@
-import solution.Node;
+// @author André Filipe 65371 Guilherme Fialho 65581
 import solution.Solver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 
 public class Main {
 
@@ -30,13 +28,10 @@ public class Main {
         }
 
 
-        //int[][] testCases = new int[numOfTestCases][2];
         for (int i = 0; i < numOfTestCases; i++){
             line = br.readLine().split(" ");
             int start = Integer.parseInt(line[0]);
             int end = Integer.parseInt(line[1]);
-            //testCases[i][0] = start;
-            //testCases[i][1] = end;
             System.out.println(solver.solve(start, end));
         }
 
